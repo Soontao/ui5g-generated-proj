@@ -1,13 +1,13 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
   "sap/ui/model/json/JSONModel",
-  "sap/ui5/demo/workthrough/model/formatter",
+  "sap/ui5/demo/walkthrough/model/formatter",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator"
 ], function(Controller, JSONModel, formatter, Filter, FilterOperator) {
   "use strict";
 
-  return Controller.extend("sap.ui5.demo.workthrough.controller.InvoiceList", {
+  return Controller.extend("sap.ui5.demo.walkthrough.controller.InvoiceList", {
 
     formatter: formatter,
 

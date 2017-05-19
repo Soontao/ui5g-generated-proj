@@ -6,7 +6,7 @@ sap.ui.define([
 ], function(Controller, History, MessageToast, JSONModel) {
   "use strict";
 
-  return Controller.extend("sap.ui5.demo.workthrough.controller.Detail", {
+  return Controller.extend("sap.ui5.demo.walkthrough.controller.Detail", {
 
     onInit: function() {
       var oViewModel = new JSONModel({

@@ -1,13 +1,15 @@
 var gulp = require('gulp');
 var babel = require('gulp-babel');
 var sourcemaps = require('gulp-sourcemaps');
-var runSequence = require("run-sequence");
+var ui5preload = require('gulp-ui5-preload');
 var eslint = require('gulp-eslint');
 var merge = require('merge-stream');
 var browserSync = require("browser-sync");
 var GulpMem = require('gulp-mem');
 var less = require('gulp-less');
 var del = require('del');
+var filter = require('gulp-filter');
+var seq = require('run-sequence');
 
 var SRC_ROOT = "./webapp";
 var DEST_ROOT = "./dist";
@@ -19,19 +21,22 @@ gulpMem.enableLog = false;
 
 
 var buildJs = () => {
-  return gulp.src([`${SRC_ROOT}/**/*.js`, `!${SRC_ROOT}/lib/*.js`])
+  return gulp.src([`${SRC_ROOT}/**/*.js`, `!${SRC_ROOT}/**/lib/*.js`])
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write('.'));
 };
 
 var buildCss = () => {
-  return gulp.src(`${SRC_ROOT}/css/*.less`, { base: `${SRC_ROOT}` })
+  return gulp.src(`${SRC_ROOT}/**/css/*.less`, { base: `${SRC_ROOT}` })
     .pipe(less());
 };
 
 var copy = () => {
-  return gulp.src([`${SRC_ROOT}/**/*`, `!${SRC_ROOT}/**/*.less`], { base: `${SRC_ROOT}` });
+  return merge(
+    gulp.src([`${SRC_ROOT}/**/*`, `!${SRC_ROOT}/**/*.js`, `!${SRC_ROOT}/**/*.less`], { base: `${SRC_ROOT}` }),
+    gulp.src([`${SRC_ROOT}/**/lib/*`], { base: `${SRC_ROOT}` })
+  );
 };
 
 var build = () => {
@@ -39,9 +44,7 @@ var build = () => {
 };
 
 
-gulp.task('default', () => {
-  runSequence('build:mem', 'bs', 'watch');
-});
+gulp.task('default', ['build:mem', 'bs', 'watch:mem']);
 
 gulp.task('build:mem', () => {
   return build()
@@ -49,8 +52,11 @@ gulp.task('build:mem', () => {
 });
 
 gulp.task('build', () => {
-  return build().
-    pipe(gulp.dest(DEST_ROOT));
+  return build()
+    .pipe(gulp.dest(DEST_ROOT))
+    .pipe(filter(['**/*.js', '**/*.xml', '!**/lib/*']))
+    .pipe(ui5preload({ base: `${DEST_ROOT}/sap/ui5/demo/walkthrough`, namespace: 'sap.ui5.demo.walkthrough' }))
+    .pipe(gulp.dest(`${DEST_ROOT}/sap/ui5/demo/walkthrough`));
 });
 
 gulp.task('clean', () => {
@@ -77,12 +83,15 @@ gulp.task('lint', () => {
     .pipe(gulp.dest(SRC_ROOT));
 });
 
-
-gulp.task('watch', () => {
-  gulp.watch(`${SRC_ROOT}/**/*`, ['reload']);
+gulp.task('watch:mem', () => {
+  gulp.watch(`${SRC_ROOT}/**/*`, () => seq('build:mem', 'reload'));
 });
 
-gulp.task('reload', ['build:mem'], browserSync.reload);
+gulp.task('live-build', ['build', 'bs'], () => {
+  gulp.watch(`${SRC_ROOT}/**/*`, () => seq('build', 'reload'));
+});
+
+gulp.task('reload', () => browserSync.reload());
 
 gulp.task("build-js", buildJs);
 
