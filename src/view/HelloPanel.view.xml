@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="sap.ui5.demo.walkthrough.controller.HelloPanel"
+	controllerName="org.fornever.ui5demo.controller.HelloPanel"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 	<Panel

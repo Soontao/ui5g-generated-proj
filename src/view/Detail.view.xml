@@ -1,8 +1,8 @@
 <mvc:View
-	controllerName="sap.ui5.demo.walkthrough.controller.Detail"
+	controllerName="org.fornever.ui5demo.controller.Detail"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:wt="sap.ui5.demo.walkthrough.control">
+	xmlns:wt="org.fornever.ui5demo.control">
 	<Page
 		title="{i18n>detailPageTitle}"
 		showNavButton="true"

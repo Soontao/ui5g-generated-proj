@@ -18,7 +18,7 @@ export default class HelloDialog extends Object {
         }
       };
       // create dialog via fragment factory
-      oDialog = sap.ui.xmlfragment(oView.getId(), "sap.ui5.demo.walkthrough.view.HelloDialog", oFragmentController);
+      oDialog = sap.ui.xmlfragment(oView.getId(), "org.fornever.ui5demo.view.HelloDialog", oFragmentController);
       // connect dialog to the root view of this component (models, lifecycle)
       oView.addDependent(oDialog);
       // forward compact/cozy style into dialog

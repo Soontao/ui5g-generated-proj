@@ -4,7 +4,7 @@ sap.ui.define([
 ], function(Controller, MessageToast) {
   "use strict";
 
-  return Controller.extend("sap.ui5.demo.walkthrough.controller.HelloPanel", {
+  return Controller.extend("org.fornever.ui5demo.controller.HelloPanel", {
 
     onShowHello : function() {
 

@@ -21,7 +21,7 @@ sap.ui.define([
       });
 
 			// simulate
-      var sPath = jQuery.sap.getModulePath("sap.ui5.demo.walkthrough.localService");
+      var sPath = jQuery.sap.getModulePath("org.fornever.ui5demo.localService");
       oMockServer.simulate(sPath + "/metadata.xml", sPath + "/mockdata");
 
 			// start

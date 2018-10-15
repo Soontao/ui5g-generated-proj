@@ -9,17 +9,14 @@ var GulpMem = require('gulp-mem');
 var less = require('gulp-less');
 var del = require('del');
 var filter = require('gulp-filter');
-var seq = require('run-sequence');
 var console = require('console');
 
-var SRC_ROOT = "./webapp";
+var SRC_ROOT = "./src";
 var DEST_ROOT = "./dist";
-
 
 var gulpMem = new GulpMem();
 gulpMem.serveBasePath = DEST_ROOT;
 gulpMem.enableLog = false;
-
 
 var buildJs = () => {
   // use to avoid an error cause whole gulp failed
@@ -50,10 +47,7 @@ var build = () => {
   return merge(copy(), buildJs(), buildCss());
 };
 
-
-gulp.task('default', () => seq('clean', 'build:mem', 'bs', 'watch:mem'));
-
-gulp.task('test', () => seq('clean', 'build:mem', 'bs:test', 'watch:mem'));
+gulp.task('clean', () => del(DEST_ROOT));
 
 gulp.task('build:mem', () => {
   return build()
@@ -64,13 +58,11 @@ gulp.task('build', () => {
   return build()
     .pipe(gulp.dest(DEST_ROOT))
     .pipe(filter(['**/*.js', '**/*.xml', '!**/lib/*']))
-    .pipe(ui5preload({ base: `${DEST_ROOT}/sap/ui5/demo/walkthrough`, namespace: 'sap.ui5.demo.walkthrough' }))
-    .pipe(gulp.dest(`${DEST_ROOT}/sap/ui5/demo/walkthrough`));
+    .pipe(ui5preload({ base: `${DEST_ROOT}`, namespace: 'org.fornever.ui5demo' }))
+    .pipe(gulp.dest(`${DEST_ROOT}`));
 });
 
-gulp.task('clean', () => {
-  del(DEST_ROOT);
-});
+
 
 gulp.task('bs', () => {
   var middlewares = require('./proxies');
@@ -79,7 +71,8 @@ gulp.task('bs', () => {
     server: {
       baseDir: DEST_ROOT,
       middleware: middlewares
-    }
+    },
+    notify: false
   });
 });
 
@@ -92,9 +85,11 @@ gulp.task('bs:test', () => {
       middleware: middlewares,
       notify: false
     },
-    startPath: "sap/ui5/demo/walkthrough/test/mockServer.html"
+    startPath: "org/fornever/ui5demo/test/mockServer.html"
   });
 });
+
+
 
 // run gulp lint to auto fix src directory
 gulp.task('lint', () => {
@@ -106,17 +101,22 @@ gulp.task('lint', () => {
 });
 
 gulp.task('watch:mem', () => {
-  gulp.watch(`${SRC_ROOT}/**/*`, () => seq('build:mem', 'reload'));
+  gulp.watch(`${SRC_ROOT}/**/*`, gulp.series(['build:mem', 'reload']));
 });
 
-gulp.task('live-build', ['build', 'bs'], () => {
-  gulp.watch(`${SRC_ROOT}/**/*`, () => seq('build', 'reload'));
+gulp.task('live-build', gulp.series('build', 'bs'), () => {
+  gulp.watch(`${SRC_ROOT}/**/*`, () => gulp.series('build', 'reload'));
 });
 
-gulp.task('reload', () => browserSync.reload());
+gulp.task('reload', (done) => { browserSync.reload(); done(); });
 
 gulp.task("build-js", buildJs);
 
 gulp.task('build-css', buildCss);
 
 gulp.task("copy", copy);
+
+gulp.task('default', gulp.series('clean', 'build:mem', gulp.parallel('bs', 'watch:mem')));
+
+gulp.task('test', gulp.series(['clean', 'build:mem', 'bs:test', 'watch:mem']));
+
