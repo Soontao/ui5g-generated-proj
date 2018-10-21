@@ -1,7 +1,7 @@
 /*global QUnit*/
 
 sap.ui.require([
-  "org/fornever/ui5demo/model/formatter",
+  "ui/views/ss/model/formatter",
   "sap/ui/model/resource/ResourceModel",
   "sap/ui/thirdparty/sinon",
   "sap/ui/thirdparty/sinon-qunit"
@@ -12,7 +12,7 @@ sap.ui.require([
   QUnit.module("Formatting functions", {
     setup: function() {
       this._oResourceModel = new ResourceModel({
-        bundleUrl: jQuery.sap.getModulePath("org.fornever.ui5demo", "/i18n/i18n.properties")
+        bundleUrl: jQuery.sap.getModulePath("ui.views.ss", "/i18n/i18n.properties")
       });
     },
     teardown: function() {

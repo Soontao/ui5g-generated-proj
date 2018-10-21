@@ -2,7 +2,7 @@
 	"_version": "1.1.0",
 	"sap.app": {
 		"_version": "1.1.0",
-		"id": "org.fornever.ui5demo",
+		"id": "ui.views.ss",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"title": "{{appTitle}}",
@@ -34,7 +34,10 @@
 	},
 	"sap.ui5": {
 		"_version": "1.1.0",
-		"rootView": "org.fornever.ui5demo.view.App",
+		"rootView": {
+			"viewName": "ui.views.ss.views.App",
+			"type": "JS"
+		},
 		"dependencies": {
 			"minUI5Version": "1.30",
 			"libs": {
@@ -45,7 +48,7 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "org.fornever.ui5demo.i18n.i18n"
+					"bundleName": "ui.views.ss.i18n.i18n"
 				}
 			},
 			"invoice": {
@@ -62,8 +65,8 @@
 		"routing": {
 			"config": {
 				"routerClass": "sap.m.routing.Router",
-				"viewType": "XML",
-				"viewPath": "org.fornever.ui5demo.view",
+				"viewType": "JS",
+				"viewPath": "ui.views.ss.views",
 				"controlId": "app",
 				"controlAggregation": "pages"
 			},

@@ -28,7 +28,7 @@ var buildJs = () => {
   return gulp.src([`${SRC_ROOT}/**/*.js`, `!${SRC_ROOT}/**/lib/*.js`])
     .pipe(sourcemaps.init())
     .pipe(b)
-    .pipe(sourcemaps.write('.'));
+    .pipe(sourcemaps.write('/sourcemap'));
 };
 
 var buildCss = () => {
@@ -58,7 +58,7 @@ gulp.task('build', () => {
   return build()
     .pipe(gulp.dest(DEST_ROOT))
     .pipe(filter(['**/*.js', '**/*.xml', '!**/lib/*']))
-    .pipe(ui5preload({ base: `${DEST_ROOT}`, namespace: 'org.fornever.ui5demo' }))
+    .pipe(ui5preload({ base: `${DEST_ROOT}`, namespace: 'ui.views.ss' }))
     .pipe(gulp.dest(`${DEST_ROOT}`));
 });
 
@@ -85,7 +85,7 @@ gulp.task('bs:test', () => {
       middleware: middlewares,
       notify: false
     },
-    startPath: "org/fornever/ui5demo/test/mockServer.html"
+    startPath: "ui/views/ss/test/mockServer.html"
   });
 });
 
